@@ -1,4 +1,5 @@
-﻿using Market.Warehouse.Application.Services.BrandServices;
+﻿using E_CommerceProjectDemo.Application.Services.CartServices;
+using Market.Warehouse.Application.Services.BrandServices;
 using Market.Warehouse.Application.Services.CategoryServices;
 using Market.Warehouse.Application.Services.DiscountServices;
 using Market.Warehouse.Application.Services.ProductServices;
@@ -25,5 +26,6 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IDiscountService, DiscountService>();
         services.AddScoped<IProductService, ProductService>();
         services.AddScoped<IReviewService, ReviewService>();
+        services.AddScoped<ICartService, CartService>();
     }
 }
