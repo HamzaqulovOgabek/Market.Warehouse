@@ -16,17 +16,33 @@ public class CartService : ICartService
         _mapper = mapper;
     }
 
-    public CartDetailsDto GetCartByUserIdAsync(int userId)
+    public async Task<CartDetailsDto> GetCartByUserIdAsync(int userId)
     {
-        //var userItems = _context.Users
-        //    .Include(x => x.CartItems)
-        //    .ThenInclude(x => x.Product)
-        //    .ThenInclude(p => p.Discount)
-        //    .FirstOrDefault(x => x.Id == userId);
-        //return _mapper.Map<CartDetailsDto>(userItems);
-        throw new NotImplementedException();
-    }
+        var cartItems = await _context.CartItems
+            .Include(x => x.Product)
+            .ThenInclude(p => p.Discount)
+            .Where(x => x.UserId == userId)
+            .ToListAsync();
 
+        var cartItemDtos = _mapper.Map<List<CartItemDto>>(cartItems);
+
+        // Calculate aggregates
+        var totalDistinctProducts = cartItemDtos.Select(ci => ci.ProductId).Distinct().Count();
+        var totalProductCount = cartItemDtos.Sum(ci => ci.Quantity);
+        var totalDiscount = cartItemDtos.Sum(ci => (ci.Price - ci.DiscountPrice) * ci.Quantity);
+        var totalPrice = cartItemDtos.Sum(ci => (ci.DiscountPrice) * ci.Quantity);
+
+        var cartDetailsDto = new CartDetailsDto
+        {
+            UserId = userId,
+            CartItems = _mapper.Map<List<CartItemDto>>(cartItems),
+            TotalDistinctProducts = totalDistinctProducts,
+            TotalProductCount = totalProductCount,
+            TotalDiscount = totalDiscount,
+            TotalPrice = totalPrice
+        };
+        return cartDetailsDto;
+    }
     public async Task AddToCartAsync(int userId, int productId, int quantity)
     {
         // Find the user's cart
@@ -66,7 +82,6 @@ public class CartService : ICartService
             await _context.SaveChangesAsync();
         }
     }
-
     public async Task ClearCartAsync(int userId)
     {
         // Find all cart items for the user
