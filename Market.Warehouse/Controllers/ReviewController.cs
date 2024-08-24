@@ -16,7 +16,7 @@ public class ReviewController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> Get(int id)
+    public async Task<IActionResult> GetAsync(int id)
     {
         var review = await service.GetAsync(id);
         return Ok(review);
@@ -28,21 +28,21 @@ public class ReviewController : ControllerBase
         return Ok(review);
     }
     [HttpPost]
-    public async Task<IActionResult> Create(ReviewDtoBase dto)
+    public async Task<IActionResult> CreateAsync(ReviewDtoBase dto)
     {
         var reviewId = await service.CreateAsync(dto);
         return Ok(reviewId);
     }
     [HttpPut]
-    public async Task<IActionResult> Update(ReviewUpdateDto dto)
+    public async Task<IActionResult> UpdateAsync(ReviewUpdateDto dto)
     {
         var reviewId = await service.UpdateAsync(dto);
         return Ok(reviewId);
     }
     [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(int id)
+    public async Task<IActionResult> DeleteAsync(int id)
     {
         await service.DeleteAsync(id);
         return Ok();
-    }
+    }   
 }

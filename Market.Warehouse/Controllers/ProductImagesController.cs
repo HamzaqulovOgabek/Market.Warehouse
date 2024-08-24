@@ -28,7 +28,7 @@ public class ProductImagesController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> Get(int id)
+    public async Task<IActionResult> GetAsync(int id)
     {
         var images = await _service.GetAsync(id);
         return Ok(images);
@@ -67,7 +67,7 @@ public class ProductImagesController : ControllerBase
         throw new InvalidOperationException("File upload failed.");
     }
     [HttpGet("download/{id}")]
-    public async Task<IActionResult> Download(int id)
+    public async Task<IActionResult> DownloadAsync(int id)
     {
         try
         {
@@ -85,6 +85,6 @@ public class ProductImagesController : ControllerBase
         {
             return StatusCode(500, $"Internal server error: {ex.Message}");
         }
-    }
+    }   
         
     }

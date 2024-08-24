@@ -15,7 +15,7 @@ public class DiscountController : ControllerBase
         _service = service;
     }
     [HttpGet("{id}")]
-    public async Task<IActionResult> Get(int id)
+    public async Task<IActionResult> GetAsync(int id)
     {
         var discount = await _service.Get(id);
         return Ok(discount);
@@ -27,19 +27,19 @@ public class DiscountController : ControllerBase
         return Ok(discounts);
     }
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] DiscountBaseDto discount)
+    public async Task<IActionResult> CreateAsync([FromBody] DiscountBaseDto discount)
     {
         var discounts = await _service.Create(discount);
         return Ok(discounts);
     }
     [HttpPut]
-    public async Task<IActionResult> Update([FromBody] DiscountUpdateDto dto)
+    public async Task<IActionResult> UpdateAsync([FromBody] DiscountUpdateDto dto)
     {
         var discounts = await _service.Update(dto);
         return Ok(discounts);
     }
     [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(int id)
+    public async Task<IActionResult> DeleteAsync(int id)
     {
         await _service.Delete(id);
         return Ok();

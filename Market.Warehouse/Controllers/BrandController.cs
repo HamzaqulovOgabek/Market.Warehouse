@@ -15,7 +15,7 @@ namespace Market.Warehouse.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(int id)
+        public async Task<IActionResult> GetAsync(int id)
         {
             return Ok(await _service.GetByIdAsync(id));
         }
@@ -25,12 +25,12 @@ namespace Market.Warehouse.Controllers
             return Ok(_service.GetAll(dto));
         }
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] BrandDtoBase dto)
+        public async Task<IActionResult> CreateAsync([FromBody] BrandDtoBase dto)
         {
             return Ok(await _service.CreateAsync(dto));
         }
         [HttpPut]
-        public async Task<IActionResult> Update([FromBody] BrandDto dto)
+        public async Task<IActionResult> UpdateAsync([FromBody] BrandDto dto)
         {
             return Ok(await _service.UpdateAsync(dto));
         }

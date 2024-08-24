@@ -16,27 +16,27 @@ public class CategoryController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> Get(int id)
+    public async Task<IActionResult> GetAsync(int id)
     {
         return Ok(await _service.GetAsync(id));
     }
     [HttpPost]
-    public IActionResult GetList([FromBody] BaseSortFilterDto options)
+    public IActionResult GetListAsync([FromBody] BaseSortFilterDto options)
     {
         return Ok(_service.GetList(options));
     }
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] CategoryDtoBase dto)
+    public async Task<IActionResult> CreateAsync([FromBody] CategoryDtoBase dto)
     {
         return Ok(await _service.CreateAsync(dto));
     }
     [HttpPut]
-    public async Task<IActionResult> Update([FromBody] CategoryUpdateDto dto)
+    public async Task<IActionResult> UpdateAsync([FromBody] CategoryUpdateDto dto)
     {
         return Ok(await _service.UpdateAsync(dto));
     }
     [HttpDelete]
-    public async Task<IActionResult> Delete(int id)
+    public async Task<IActionResult> DeleteAsync(int id)
     {
         await _service.Delete(id);
         return Ok();

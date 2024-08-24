@@ -16,7 +16,7 @@ public class ProductController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> Get(int id)
+    public async Task<IActionResult> GetAsync(int id)
     {
         return Ok(await _service.Get(id));
     }
@@ -27,17 +27,17 @@ public class ProductController : ControllerBase
         return Ok(product);
     }
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] ProductBaseDto dto)
+    public async Task<IActionResult> CreateAsync([FromBody] ProductBaseDto dto)
     {
         return Ok(await _service.Create(dto));
     }
     [HttpPut]
-    public async Task<IActionResult> Update([FromBody] ProductDto dto)
+    public async Task<IActionResult> UpdateAsync([FromBody] ProductDto dto)
     {
         return Ok(await _service.Update(dto));
     }
     [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(int id)
+    public async Task<IActionResult> DeleteAsync(int id)
     {
         await _service.Delete(id);
 
