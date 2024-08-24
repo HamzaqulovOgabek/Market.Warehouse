@@ -18,7 +18,9 @@ public class AppDbContext : DbContext
     public DbSet<Product> Products { get; set; }
     public DbSet<ProductImage> ProductImages { get; set; }
     public DbSet<Review> Reviews { get; set; }
-    public DbSet<CartItem> CartItems { get; set; }  
+    public DbSet<CartItem> CartItems { get; set; }
+    public DbSet<Domain.Models.Warehouse> WareHouses { get; set; }
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
