@@ -32,5 +32,10 @@ public class AppDbContext : DbContext
             e.Property(d => d.InterestRate)
             .HasPrecision(18, 2);
         });
+
+        modelBuilder.Entity<ProductImage>(options =>
+        {
+            options.ToTable("ProductImage");
+        });
     }
 }
