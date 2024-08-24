@@ -18,12 +18,12 @@ public class BrandService : IBrandService
         _mapper = mapper;
     }
 
-    public IQueryable<BrandDtoBase> GetAll(BaseSortFilterDto dto)
+    public IQueryable<BrandDto> GetAll(BaseSortFilterDto dto)
     {
 
         var query = _repository.GetAll()
             .SortFilter(dto, nameof(BrandDto.Name))
-            .Select(x => _mapper.Map<BrandDtoBase>(x));
+            .Select(x => _mapper.Map<BrandDto>(x));
 
         return query;
     }

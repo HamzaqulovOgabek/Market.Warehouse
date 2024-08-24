@@ -7,11 +7,7 @@ public class BrandAutoMapperProfile : Profile
 {
     public BrandAutoMapperProfile()
     {
-        CreateMap<BrandDto, BrandDtoBase>();
-        CreateMap<BrandDtoBase, Brand>();
-        CreateMap<Brand, BrandDto>();
-        CreateMap<BrandDto, Brand>();
-
-        //Add other mappings here
+        CreateMap<Brand, BrandDtoBase>();
+        CreateMap<Brand, BrandDto>().ReverseMap();
     }
 }

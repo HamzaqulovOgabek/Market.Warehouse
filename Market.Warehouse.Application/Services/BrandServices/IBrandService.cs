@@ -6,7 +6,7 @@ public interface IBrandService
 {
     Task<int> CreateAsync(BrandDtoBase dto);
     Task DeleteAsync(int id);
-    IQueryable<BrandDtoBase> GetAll(BaseSortFilterDto dto);
+    IQueryable<BrandDto> GetAll(BaseSortFilterDto dto);
     Task<BrandDto> GetByIdAsync(int id);
     Task<int> UpdateAsync(BrandDto dto);
 }
