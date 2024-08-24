@@ -53,7 +53,6 @@ public class BrandService : IBrandService
     }
     public async Task DeleteAsync(int id)
     {
-
         await _repository.DeleteAsync(id);
     }
 }

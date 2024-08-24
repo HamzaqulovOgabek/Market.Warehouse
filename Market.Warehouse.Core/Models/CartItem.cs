@@ -1,10 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Market.Warehouse.Domain.Enums;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Market.Warehouse.Domain.Models;
 
 [Table(nameof(CartItem))]
-public class CartItem : BaseEntity<int>
+public class CartItem : BaseEntity<int>, IHaveState 
 {
     public int UserId { get; set; }
     public int ProductId { get; set; }
@@ -12,5 +13,6 @@ public class CartItem : BaseEntity<int>
     public int Quantity { get; set; }
     public Product? Product { get; set; }
     public DateTime DateAdded { get; set; } = DateTime.Now;
-    //public User? User { get; set; }
+    public State State { get; set; } = State.ACTIVE;
+
 }
