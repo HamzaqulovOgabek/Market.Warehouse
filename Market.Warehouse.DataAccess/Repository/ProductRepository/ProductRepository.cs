@@ -1,4 +1,5 @@
 ﻿using Market.Warehouse.DataAccess.Context;
+using Market.Warehouse.Domain.Enums;
 using Market.Warehouse.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,5 +17,16 @@ public class ProductRepository : BaseRepository<Product, int>, IProductRepositor
     {
         var isExistName = await Context.Products.AnyAsync(p => p.Name == name);
         return isExistName;
+    }
+    public override Task<Product?> GetByIdAsync(int id)
+    {
+        var product = Context.Products
+            .Include(p => p.Brand)
+            .Include(p => p.Discount)
+            .Include(p => p.Category)
+            .Include(p => p.Reviews)
+            .FirstOrDefaultAsync(p => p.Id == id && p.State == State.ACTIVE);
+
+        return product;
     }
 }

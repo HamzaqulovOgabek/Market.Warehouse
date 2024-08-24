@@ -12,7 +12,7 @@ public static class IQueryableExtensions
         BaseSortFilterDto options, params string[] searchingProperties)
     {
         if (options.HasSearch)
-            query = Search(query, options, searchingProperties);
+            query = Search2(query, options, searchingProperties);
 
         // Paging logic
         query = query
@@ -53,7 +53,48 @@ public static class IQueryableExtensions
                             Expression.Constant($"%{options.SearchingWord}%")
                         );
 
+
                         predicate = predicate == null ? likeExpression : Expression.OrElse(predicate, likeExpression);
+                    }
+                }
+            }
+
+            if (predicate != null)
+            {
+                var lambda = Expression.Lambda<Func<T, bool>>(predicate, parameter);
+                query = query.Where(lambda);
+            }
+        }
+
+        return query;
+    }
+    private static IQueryable<T> Search2<T>(IQueryable<T> query,
+        BaseSortFilterDto options,
+        string[] searchingProperties)
+
+    {
+        if (options.HasSearch && searchingProperties.Length > 0)
+        {
+            var parameter = Expression.Parameter(typeof(T), "e");
+            Expression? predicate = null;
+
+            foreach (var property in searchingProperties)
+            {
+                var propertyInfo = typeof(T).GetProperty(property, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
+                if (propertyInfo != null)
+                {
+                    var propertyAccess = Expression.MakeMemberAccess(parameter, propertyInfo);
+                    Expression propertyValueExpression = propertyInfo.PropertyType == typeof(string)
+                   ? propertyAccess
+                   : Expression.Call(propertyAccess, "ToString", null, null);
+
+                    var containsMethod = typeof(string).GetMethod(nameof(string.Contains), new[] { typeof(string) });
+                    if (containsMethod != null)
+                    {
+                        var searchTerm = Expression.Constant(options.SearchingWord, typeof(string));
+                        var containsExpression = Expression.Call(propertyValueExpression, containsMethod, searchTerm);
+
+                        predicate = predicate == null ? containsExpression : Expression.OrElse(predicate, containsExpression);
                     }
                 }
             }

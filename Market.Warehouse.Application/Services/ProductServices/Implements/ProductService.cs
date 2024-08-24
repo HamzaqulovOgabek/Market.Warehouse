@@ -31,7 +31,6 @@ public class ProductService : IProductService
     {
         var products = _repository.GetAll()
             .Include(x => x.Discount)
-            //.Select(x => _mapper.Map<ProductListDto>(x))
             .ProjectTo<ProductListDto>(_mapper.ConfigurationProvider)
             .SortFilter(options);
 

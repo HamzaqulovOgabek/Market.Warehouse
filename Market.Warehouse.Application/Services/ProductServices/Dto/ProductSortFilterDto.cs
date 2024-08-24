@@ -3,7 +3,7 @@
 namespace Market.Warehouse.Application.Services.ProductServices;
 
 public class ProductSortFilterDto : BaseSortFilterDto
-{
+{   
     public int? BrandId { get; set; }
     public double? DiscountId { get; set; }
     public int? CategoryId { get; set; }

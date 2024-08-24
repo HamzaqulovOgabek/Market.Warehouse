@@ -2,6 +2,7 @@
 using Market.Warehouse.Application.Services.BrandServices;
 using Market.Warehouse.Application.Services.CategoryServices;
 using Market.Warehouse.Application.Services.DiscountServices;
+using Market.Warehouse.Application.Services.ProductImagesServices;
 using Market.Warehouse.Application.Services.ProductServices;
 using Market.Warehouse.Application.Services.ReviewServices;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,7 +15,7 @@ public static class ServiceCollectionExtensions
     {
         services.AddAutoMapper(typeof(BrandAutoMapperProfile));
         services.AddAutoMapper(typeof(CategoryMappingProfile));
-        services.AddAutoMapper(typeof(ProductMappingProfile));
+        services.AddAutoMapper(typeof(ProductAutoMapperProfile));
         AddServices(services);
         return services;
     }
@@ -27,5 +28,6 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IProductService, ProductService>();
         services.AddScoped<IReviewService, ReviewService>();
         services.AddScoped<ICartService, CartService>();
+        services.AddScoped<IProductImageService, ProductImageService>();
     }
 }
