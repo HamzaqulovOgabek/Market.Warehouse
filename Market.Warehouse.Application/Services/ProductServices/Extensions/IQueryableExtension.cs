@@ -1,4 +1,5 @@
 ﻿using Market.Warehouse.Application.Extensions;
+using Market.Warehouse.Domain.Models;
 
 namespace Market.Warehouse.Application.Services.ProductServices;
 
@@ -8,11 +9,11 @@ public static class IQueryableExtension
         this IQueryable<ProductListDto> query,
         ProductSortFilterDto options)
     {
-        if (options.DiscountId.HasValue)
-            query = query.Where(x => x.DiscountId == options.DiscountId.Value);
+        //if (options.DiscountId.HasValue)
+        //    query = query.Where(x => x.DiscountId == options.DiscountId.Value);
 
-        if (options.BrandId.HasValue)
-            query = query.Where(x => x.BrandId == options.BrandId.Value);
+        //if (options.BrandId.HasValue)
+        //    query = query.Where(x => x.BrandId == options.BrandId.Value);
 
         if (options.CategoryId.HasValue)
             query = query.Where(x => x.CategoryId == options.CategoryId.Value);
@@ -26,10 +27,10 @@ public static class IQueryableExtension
             || x.DiscountPrice <= options.ToPrice.Value);
 
         query = query.SortFilter(options,
-            nameof(ProductListDto.Name),
-            nameof(ProductListDto.Color),
-            nameof(ProductListDto.Price),
-            nameof(ProductListDto.Features)
+            nameof(Product.Name),
+            nameof(Product.Color),
+            nameof(Product.Price),
+            nameof(Product.Features)
             );
         return query;
     }

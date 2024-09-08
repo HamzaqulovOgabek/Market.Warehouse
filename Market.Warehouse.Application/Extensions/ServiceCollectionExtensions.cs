@@ -30,4 +30,5 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ICartService, CartService>();
         services.AddScoped<IProductImageService, ProductImageService>();
     }
+
 }

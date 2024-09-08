@@ -29,13 +29,14 @@ public class ProductAutoMapperProfile : Profile
         CreateMap<Review, ReviewDto>();
 
         CreateMap<Product, ProductListDto>()
-            .ForMember(d => d.RewierCount, cfg => cfg.MapFrom(e => e.Reviews!.Count))
-            .ForMember(d => d.Discount, cfg => cfg.MapFrom(e => e.Discount!.InterestRate.FormattedToString() + " %"))
-            .ForMember(d => d.DiscountPrice, cfg => cfg.MapFrom(e =>
-                    e.Discount.ExpirationDate < now
-                    ?
-                    e.Price - (e.Discount!.InterestRate / 100) * e.Price : 0)
-            );
+            .ForMember(d => d.DiscountPrice,
+            cfg => cfg.MapFrom(e =>
+                e.Discount.ExpirationDate > now ?
+                e.Price - e.Price * e.Discount.InterestRate / 100 : e.Price))
+            .ForMember(d => d.ReviewCount, cfg => cfg.MapFrom(e => e.Reviews.Count))
+            .ForMember(d => d.Rating,
+            cfg => cfg.MapFrom(e =>
+                e.Reviews.Any() ? e.Reviews.Average(e => e.Rate) : 0));
 
     }
 }

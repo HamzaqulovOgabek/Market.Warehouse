@@ -51,7 +51,6 @@ public class CartService : ICartService
             .Where(c => c.ProductId == productId && c.UserId == userId)
             .FirstOrDefaultAsync(c => c.UserId == userId);
 
-
         if (existingCartItem != null)
         {
             existingCartItem.Quantity += quantity;
@@ -67,8 +66,9 @@ public class CartService : ICartService
                 DateAdded = DateTime.Now,
 
             };
-            _context.CartItems.Add(cartItem);
+            await _context.CartItems.AddAsync(cartItem);
         }
+
         await _context.SaveChangesAsync();
     }
     public async Task RemoveFromCartAsync(int userId, int productId)

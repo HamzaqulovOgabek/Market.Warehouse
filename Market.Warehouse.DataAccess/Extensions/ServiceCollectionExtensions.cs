@@ -28,7 +28,7 @@ public static class ServiceCollectionExtensions
 
     private static void AddRepositories(IServiceCollection services)
     {
-        services.AddScoped<IBrandRepository,  BrandRepository>();
+        services.AddScoped<IBrandRepository, BrandRepository>();
         services.AddScoped<ICategoryRepository, CategoryRepository>();
         services.AddScoped<IDiscountRepository, DiscountRepository>();
         services.AddScoped<IProductRepository, ProductRepository>();
@@ -39,4 +39,6 @@ public static class ServiceCollectionExtensions
 
 
     }
+
+
 }

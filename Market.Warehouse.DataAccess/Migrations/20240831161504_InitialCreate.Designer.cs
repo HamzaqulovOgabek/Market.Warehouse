@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Market.Warehouse.DataAccess.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240822175925_AddedDateToCartItem")]
-    partial class AddedDateToCartItem
+    [Migration("20240831161504_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -37,6 +37,9 @@ namespace Market.Warehouse.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("State")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.ToTable("Brand");
@@ -57,6 +60,9 @@ namespace Market.Warehouse.DataAccess.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<int>("State")
                         .HasColumnType("int");
 
                     b.Property<int>("UserId")
@@ -193,6 +199,9 @@ namespace Market.Warehouse.DataAccess.Migrations
                     b.Property<int>("State")
                         .HasColumnType("int");
 
+                    b.Property<int>("WareHouseId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("BrandId");
@@ -200,6 +209,8 @@ namespace Market.Warehouse.DataAccess.Migrations
                     b.HasIndex("CategoryId");
 
                     b.HasIndex("DiscountId");
+
+                    b.HasIndex("WareHouseId");
 
                     b.ToTable("Product");
                 });
@@ -212,6 +223,18 @@ namespace Market.Warehouse.DataAccess.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("ContentType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FilePath")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ImageUrl")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -219,11 +242,14 @@ namespace Market.Warehouse.DataAccess.Migrations
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
+                    b.Property<int>("State")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductImage");
+                    b.ToTable("ProductImage", (string)null);
                 });
 
             modelBuilder.Entity("Market.Warehouse.Domain.Models.Review", b =>
@@ -256,6 +282,9 @@ namespace Market.Warehouse.DataAccess.Migrations
                     b.Property<int>("Rate")
                         .HasColumnType("int");
 
+                    b.Property<int>("State")
+                        .HasColumnType("int");
+
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
@@ -264,6 +293,30 @@ namespace Market.Warehouse.DataAccess.Migrations
                     b.HasIndex("ProductId");
 
                     b.ToTable("Review");
+                });
+
+            modelBuilder.Entity("Market.Warehouse.Domain.Models.Warehouse", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("State")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Warehouse");
                 });
 
             modelBuilder.Entity("Market.Warehouse.Domain.Models.Favourite", b =>
@@ -308,6 +361,12 @@ namespace Market.Warehouse.DataAccess.Migrations
                     b.HasOne("Market.Warehouse.Domain.Models.Discount", "Discount")
                         .WithMany("Products")
                         .HasForeignKey("DiscountId");
+
+                    b.HasOne("Market.Warehouse.Domain.Models.Warehouse", null)
+                        .WithMany("Products")
+                        .HasForeignKey("WareHouseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Brand");
 
@@ -367,6 +426,11 @@ namespace Market.Warehouse.DataAccess.Migrations
                     b.Navigation("ProductImages");
 
                     b.Navigation("Reviews");
+                });
+
+            modelBuilder.Entity("Market.Warehouse.Domain.Models.Warehouse", b =>
+                {
+                    b.Navigation("Products");
                 });
 #pragma warning restore 612, 618
         }

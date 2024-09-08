@@ -27,6 +27,7 @@ public class Program
             app.UseSwagger();
             app.UseSwaggerUI();
         }
+        app.SeedDatabase();
 
         app.UseHttpsRedirection();
 
@@ -36,4 +37,5 @@ public class Program
 
         app.Run();
     }
+
 }
