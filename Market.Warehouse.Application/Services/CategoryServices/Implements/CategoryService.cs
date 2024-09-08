@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using E_CommerceProjectDemo.Application.Services.CategoryServices;
 using Market.Warehouse.Application.Dto;
 using Market.Warehouse.Application.Extensions;
+using Market.Warehouse.Application.Services.CategoryServices.Dto;
 using Market.Warehouse.DataAccess.Exceptions;
 using Market.Warehouse.DataAccess.Repository.CategoryRepository;
 using Market.Warehouse.Domain.Models;
@@ -24,16 +26,16 @@ public class CategoryService : ICategoryService
              .SortFilter(options)
              .Select(x => _mapper.Map<CategoryListDto>(x));
     }
-    public async Task<CategoryDto> GetAsync(int id)
+    public async Task<CategoryCreateDto> GetAsync(int id)
     {
         var category = await _repository.GetByIdAsync(id);
 
         if (category == null)
             throw new EntityNotFoundException("Category not found with this id");
 
-        return _mapper.Map<CategoryDto>(category);
+        return _mapper.Map<CategoryCreateDto>(category);
     }
-    public async Task<int> CreateAsync(CategoryDtoBase dto)
+    public async Task<int> CreateAsync(CategoryCreateDto dto)
     {
         var category = _mapper.Map<Category>(dto);
        return await _repository.CreateAsync(category);

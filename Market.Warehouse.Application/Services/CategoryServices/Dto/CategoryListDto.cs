@@ -1,9 +1,8 @@
-﻿using Market.Warehouse.Domain.Enums;
+﻿namespace E_CommerceProjectDemo.Application.Services.CategoryServices;
 
-namespace Market.Warehouse.Application.Services.CategoryServices;
-
-public record CategoryListDto(
-    int Id,
-    string Name,
-    State State) : CategoryDtoBase(Name);
-
+public class CategoryListDto
+{
+    public int Id { get; set; }
+    public required string Name { get; set; }
+    public int ProductCount { get; set; }
+}

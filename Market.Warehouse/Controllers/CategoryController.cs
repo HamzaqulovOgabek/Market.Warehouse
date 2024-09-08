@@ -1,5 +1,7 @@
-﻿using Market.Warehouse.Application.Dto;
+﻿using E_CommerceProjectDemo.Application.Services.CategoryServices;
+using Market.Warehouse.Application.Dto;
 using Market.Warehouse.Application.Services.CategoryServices;
+using Market.Warehouse.Application.Services.CategoryServices.Dto;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Market.Warehouse.Controllers;
@@ -26,7 +28,7 @@ public class CategoryController : ControllerBase
         return Ok(_service.GetList(options));
     }
     [HttpPost]
-    public async Task<IActionResult> CreateAsync([FromBody] CategoryDtoBase dto)
+    public async Task<IActionResult> CreateAsync([FromBody] CategoryCreateDto dto)
     {
         return Ok(await _service.CreateAsync(dto));
     }

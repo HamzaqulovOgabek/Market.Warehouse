@@ -1,9 +1,8 @@
-﻿using Market.Warehouse.Domain.Enums;
+﻿namespace Market.Warehouse.Application.Services.CategoryServices.Dto;
 
-namespace Market.Warehouse.Application.Services.CategoryServices;
-
-public record CategoryUpdateDto(
-    int Id,
-    string Name,
-    State State) : CategoryDtoBase(Name);
-
+public class CategoryUpdateDto
+{
+    public int Id { get; set; }
+    public required string Name { get; set; }
+    public int? ParentId { get; set; }
+}
