@@ -20,7 +20,7 @@ public class Product : Auditable<int>, IHaveState
     public int BrandId { get; set; }
     public int? DiscountId { get; set; }
     public int? CategoryId { get; set; }
-    public int WareHouseId { get; set; }    
+    public int WareHouseId { get; set; } = 1;
     public State State { get; set; } = State.ACTIVE;
 
     public Brand Brand { get; set; } = null!;
