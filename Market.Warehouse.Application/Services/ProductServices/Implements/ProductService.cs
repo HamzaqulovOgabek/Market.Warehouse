@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Market.Warehouse.Application.Extensions;
+using Market.Warehouse.Application.Services.RedisCacheServices;
 using Market.Warehouse.DataAccess.Exceptions;
 using Market.Warehouse.DataAccess.Repository.ProductRepository;
 using Market.Warehouse.Domain.Models;
@@ -12,19 +13,29 @@ public class ProductService : IProductService
 {
     private readonly IProductRepository _repository;
     private readonly IMapper _mapper;
+    private readonly IRedisCacheService _redisDatabase;
 
-    public ProductService(IProductRepository repository, IMapper mapper)
+    public ProductService(IProductRepository repository, IMapper mapper, IRedisCacheService redisDatabase)
     {
         _repository = repository;
-        this._mapper = mapper;
+        _mapper = mapper;
+        _redisDatabase = redisDatabase;
     }
 
     public async Task<ProductDto> Get(int id)
     {
+        string cacheKey = $"product:{id}";
+        var cachedProduct = await _redisDatabase.GetCacheAsync<Product>(cacheKey);
+        if(cachedProduct != null)
+        {
+            return _mapper.Map<ProductDto>(cachedProduct);
+        }
+
         var product = await _repository.GetByIdAsync(id);
         if (product == null)
             throw new EntityNotFoundException("Entity not Found with this id");
 
+        await _redisDatabase.SetCacheAsync(cacheKey, product, TimeSpan.FromMinutes(30));
         return _mapper.Map<ProductDto>(product);
     }
     public IQueryable<ProductListDto> GetList(ProductSortFilterDto options)

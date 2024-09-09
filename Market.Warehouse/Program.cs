@@ -1,5 +1,6 @@
 using Market.Warehouse.Application.Extensions;
 using Market.Warehouse.DataAccess.Extensions;
+using Microsoft.Extensions.Configuration;
 using Swashbuckle.AspNetCore.SwaggerUI;
 namespace Market.Warehouse;
 
@@ -15,9 +16,10 @@ public class Program
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
+        
 
         builder.Services.AddDataLayer(builder.Configuration);
-        builder.Services.AddApplicationLayer();
+        builder.Services.AddApplicationLayer(builder.Configuration);
         
         var app = builder.Build();
 
