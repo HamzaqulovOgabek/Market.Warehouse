@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using Market.Warehouse.Application.Extensions;
 using Market.Warehouse.Application.Services.RedisCacheServices;
 using Market.Warehouse.DataAccess.Exceptions;
 using Market.Warehouse.DataAccess.Repository.ProductRepository;
@@ -21,12 +20,11 @@ public class ProductService : IProductService
         _mapper = mapper;
         _redisDatabase = redisDatabase;
     }
-
     public async Task<ProductDto> Get(int id)
     {
         string cacheKey = $"product:{id}";
         var cachedProduct = await _redisDatabase.GetCacheAsync<Product>(cacheKey);
-        if(cachedProduct != null)
+        if (cachedProduct != null)
         {
             return _mapper.Map<ProductDto>(cachedProduct);
         }
@@ -53,17 +51,29 @@ public class ProductService : IProductService
         if (await _repository.ExistsByNameAsync(dto.Name))
             throw new Exception($"Product with the {nameof(dto.Name)} already exists");
 
+        IsValidData(dto);
+
         var productId = await _repository.CreateAsync(product);
         return productId;
     }
     public async Task<int> Update(ProductDto dto)
     {
+        IsValidData(dto);
         var product = _mapper.Map<Product>(dto);
         var productId = await _repository.UpdateAsync(product);
         return productId;
     }
     public async Task Delete(int id)
     {
+        // do we such a product
+        await Get(id);
         await _repository.DeleteAsync(id);
+    }
+    private static void IsValidData(ProductBaseDto dto)
+    {
+        if (string.IsNullOrWhiteSpace(dto.Name) || dto.Price <= 0)
+        {
+            throw new InvalidOperationException("Invalid data for product");
+        }
     }
 }
