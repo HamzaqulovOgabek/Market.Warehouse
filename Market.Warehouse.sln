@@ -11,6 +11,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Market.Warehouse.Domain", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Market.Warehouse.DataAccess", "Market.Warehouse.DataAccess\Market.Warehouse.DataAccess.csproj", "{9AE3FD6E-1F65-4612-8D47-A7C4BE76C255}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Market.Warehouse.Application.UnitTesting", "TestProject2\Market.Warehouse.Application.UnitTesting.csproj", "{6C763C14-38F9-4040-AC58-684473F08B04}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp1", "ConsoleApp1\ConsoleApp1.csproj", "{8ED0CF36-E388-4CFA-BA0E-427BE38B48DC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +37,14 @@ Global
 		{9AE3FD6E-1F65-4612-8D47-A7C4BE76C255}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9AE3FD6E-1F65-4612-8D47-A7C4BE76C255}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9AE3FD6E-1F65-4612-8D47-A7C4BE76C255}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C763C14-38F9-4040-AC58-684473F08B04}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C763C14-38F9-4040-AC58-684473F08B04}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C763C14-38F9-4040-AC58-684473F08B04}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C763C14-38F9-4040-AC58-684473F08B04}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8ED0CF36-E388-4CFA-BA0E-427BE38B48DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8ED0CF36-E388-4CFA-BA0E-427BE38B48DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8ED0CF36-E388-4CFA-BA0E-427BE38B48DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8ED0CF36-E388-4CFA-BA0E-427BE38B48DC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

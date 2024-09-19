@@ -15,12 +15,9 @@ public class Product : Auditable<int>, IHaveState
     public string? Color { get; set; }
     public string? Features { get; set; }
     public string? Material { get; set; }
-    [Range(0, int.MaxValue, ErrorMessage = "Quantity cannot be negative")]
-    public int Quantity { get; set; }
     public int BrandId { get; set; }
     public int? DiscountId { get; set; }
-    public int? CategoryId { get; set; }
-    public int WareHouseId { get; set; } = 1;
+    public int CategoryId { get; set; }
     public State State { get; set; } = State.ACTIVE;
 
     public Brand Brand { get; set; } = null!;
@@ -28,4 +25,5 @@ public class Product : Auditable<int>, IHaveState
     public Category? Category { get; set; }
     public ICollection<Review>? Reviews { get; set; }
     public ICollection<ProductImage>? ProductImages { get; set; }
+    public ICollection<Inventory> Inventories{ get; set; }
 }

@@ -1,4 +1,5 @@
-﻿using Market.Warehouse.Application.Services.InventoryServices;
+﻿using Market.Warehouse.Application.Dto;
+using Market.Warehouse.Application.Services.InventoryServices;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Market.Warehouse.Controllers;
@@ -24,9 +25,9 @@ public class InventoryController : ControllerBase
         return Ok(stock);
     }
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<InventoryDto>>> GetAllStock()
+    public ActionResult<IEnumerable<InventoryDto>> GetAllStock(BaseSortFilterDto  dto)
     {
-        var stocks = await _service.GetAllStockAsync();
+        var stocks = _service.GetAllStock(dto);
         return Ok(stocks);
     }
     [HttpPost("add")]

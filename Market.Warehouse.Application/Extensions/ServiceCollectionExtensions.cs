@@ -2,6 +2,7 @@
 using Market.Warehouse.Application.Services.BrandServices;
 using Market.Warehouse.Application.Services.CategoryServices;
 using Market.Warehouse.Application.Services.DiscountServices;
+using Market.Warehouse.Application.Services.InventoryServices;
 using Market.Warehouse.Application.Services.ProductImagesServices;
 using Market.Warehouse.Application.Services.ProductServices;
 using Market.Warehouse.Application.Services.RedisCacheServices;
@@ -35,6 +36,8 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ICartService, CartService>();
         services.AddScoped<IProductImageService, ProductImageService>();
         services.AddScoped<IRedisCacheService, RedisCacheService>();
+        services.AddScoped<IInventoryService, InventoryService>();
+
 
     }
 

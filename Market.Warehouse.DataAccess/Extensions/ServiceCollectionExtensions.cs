@@ -4,6 +4,7 @@ using Market.Warehouse.DataAccess.Repository.CartItemRepository;
 using Market.Warehouse.DataAccess.Repository.CartRepository;
 using Market.Warehouse.DataAccess.Repository.CategoryRepository;
 using Market.Warehouse.DataAccess.Repository.DiscountRepository;
+using Market.Warehouse.DataAccess.Repository.InventoryRepository;
 using Market.Warehouse.DataAccess.Repository.ProductImagesRepository;
 using Market.Warehouse.DataAccess.Repository.ProductRepository;
 using Market.Warehouse.DataAccess.Repository.ReviewRepository;
@@ -36,6 +37,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IProductImagesRepository, ProductImagesRepository>();
         services.AddScoped<ICartItemRepository, CartItemRepository>();
         services.AddScoped<ICartRepository, CartRepository>();
+        services.AddScoped<IInventoryRepository, InventoryRepository>();
 
 
     }

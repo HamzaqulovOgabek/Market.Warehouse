@@ -20,6 +20,7 @@ public class AppDbContext : DbContext
     public DbSet<Review> Reviews { get; set; }
     public DbSet<CartItem> CartItems { get; set; }
     public DbSet<Domain.Models.Warehouse> WareHouses { get; set; }
+    public DbSet<Inventory> Inventories { get; set; }   
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
