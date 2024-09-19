@@ -4,7 +4,6 @@ using Market.Warehouse.Application.Extensions;
 using Market.Warehouse.DataAccess.Repository.InventoryRepository;
 using Market.Warehouse.Domain.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
 
 namespace Market.Warehouse.Application.Services.InventoryServices;
@@ -23,7 +22,7 @@ public class InventoryService : IInventoryService
         _inventoryRepository = inventoryRepository;
         _logger = logger;
         this._mapper = mapper;
-    }   
+    }
 
     public async Task<InventoryDto> GetStockAsync(int productId, int warehouseId)
     {
@@ -38,7 +37,7 @@ public class InventoryService : IInventoryService
         return _mapper.Map<InventoryDto>(inventory);
     }
     public IQueryable<InventoryDto> GetAllStock(BaseSortFilterDto dto)
-    { 
+    {
         var inventories = _inventoryRepository
             .GetAllStock()
             .SortFilter(dto);
