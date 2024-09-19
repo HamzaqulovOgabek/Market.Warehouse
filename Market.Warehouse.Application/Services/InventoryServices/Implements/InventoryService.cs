@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Market.Warehouse.Application.Dto;
 using Market.Warehouse.Application.Extensions;
+using Market.Warehouse.DataAccess.Exceptions;
 using Market.Warehouse.DataAccess.Repository.InventoryRepository;
 using Market.Warehouse.Domain.Models;
 using Microsoft.EntityFrameworkCore;
@@ -44,7 +45,7 @@ public class InventoryService : IInventoryService
 
         if (!inventories.Any())
         {
-            throw new Exception("There is nothing in warehouses");
+            throw new EntityNotFoundException("There is nothing in warehouses");
         }
         return inventories.Select(i => _mapper.Map<InventoryDto>(i));
     }
@@ -126,7 +127,7 @@ public class InventoryService : IInventoryService
     {
         IsInvalidInput(productId);
         var inventories = await _inventoryRepository.GetByProductAsync(productId);
-        if (inventories == null || inventories.Any())
+        if (inventories == null || !inventories.Any())
         {
             throw new Exception("Inventory not found");
         }
@@ -142,6 +143,12 @@ public class InventoryService : IInventoryService
             throw new Exception("Inventory not found");
         }
         return inventories.Select(_mapper.Map<InventoryDto>);
+    }
+    public async Task<bool> ExistStockForProductAsync(int productId)
+    {
+        var stocks = await GetStockByProductAsync(productId);
+
+        return stocks.Any(p => p.Quantity > 0);
     }
 
     private void IsInvalidInput(int productId = 1, int warehouseId = 1, int quantity = 1)
