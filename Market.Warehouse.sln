@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Market.Warehouse.Domain", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Market.Warehouse.DataAccess", "Market.Warehouse.DataAccess\Market.Warehouse.DataAccess.csproj", "{9AE3FD6E-1F65-4612-8D47-A7C4BE76C255}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Market.Warehouse.Application.UnitTesting", "TestProject2\Market.Warehouse.Application.UnitTesting.csproj", "{6C763C14-38F9-4040-AC58-684473F08B04}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Market.Warehouse.Application.UnitTest", "TestProject1\Market.Warehouse.Application.UnitTest.csproj", "{438CCD03-6284-4757-97E8-FBF329ED4884}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,10 +35,10 @@ Global
 		{9AE3FD6E-1F65-4612-8D47-A7C4BE76C255}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9AE3FD6E-1F65-4612-8D47-A7C4BE76C255}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9AE3FD6E-1F65-4612-8D47-A7C4BE76C255}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6C763C14-38F9-4040-AC58-684473F08B04}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6C763C14-38F9-4040-AC58-684473F08B04}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6C763C14-38F9-4040-AC58-684473F08B04}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6C763C14-38F9-4040-AC58-684473F08B04}.Release|Any CPU.Build.0 = Release|Any CPU
+		{438CCD03-6284-4757-97E8-FBF329ED4884}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{438CCD03-6284-4757-97E8-FBF329ED4884}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{438CCD03-6284-4757-97E8-FBF329ED4884}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{438CCD03-6284-4757-97E8-FBF329ED4884}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

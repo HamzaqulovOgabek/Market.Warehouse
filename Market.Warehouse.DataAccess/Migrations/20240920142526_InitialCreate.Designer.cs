@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Market.Warehouse.DataAccess.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240831161504_InitialCreate")]
+    [Migration("20240920142526_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -145,6 +145,47 @@ namespace Market.Warehouse.DataAccess.Migrations
                     b.ToTable("Discount");
                 });
 
+            modelBuilder.Entity("Market.Warehouse.Domain.Models.Inventory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("CreatedUserId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("ModifiedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ModifiedUserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<int>("State")
+                        .HasColumnType("int");
+
+                    b.Property<int>("WarehouseId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("WarehouseId");
+
+                    b.ToTable("Inventory");
+                });
+
             modelBuilder.Entity("Market.Warehouse.Domain.Models.Product", b =>
                 {
                     b.Property<int>("Id")
@@ -156,7 +197,7 @@ namespace Market.Warehouse.DataAccess.Migrations
                     b.Property<int>("BrandId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("CategoryId")
+                    b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
                     b.Property<string>("Color")
@@ -193,13 +234,10 @@ namespace Market.Warehouse.DataAccess.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18, 2)");
 
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
                     b.Property<int>("State")
                         .HasColumnType("int");
 
-                    b.Property<int>("WareHouseId")
+                    b.Property<int?>("WarehouseId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -210,7 +248,7 @@ namespace Market.Warehouse.DataAccess.Migrations
 
                     b.HasIndex("DiscountId");
 
-                    b.HasIndex("WareHouseId");
+                    b.HasIndex("WarehouseId");
 
                     b.ToTable("Product");
                 });
@@ -346,6 +384,25 @@ namespace Market.Warehouse.DataAccess.Migrations
                     b.Navigation("Parent");
                 });
 
+            modelBuilder.Entity("Market.Warehouse.Domain.Models.Inventory", b =>
+                {
+                    b.HasOne("Market.Warehouse.Domain.Models.Product", "Product")
+                        .WithMany("Inventories")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Market.Warehouse.Domain.Models.Warehouse", "Warehouse")
+                        .WithMany()
+                        .HasForeignKey("WarehouseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+
+                    b.Navigation("Warehouse");
+                });
+
             modelBuilder.Entity("Market.Warehouse.Domain.Models.Product", b =>
                 {
                     b.HasOne("Market.Warehouse.Domain.Models.Brand", "Brand")
@@ -356,7 +413,9 @@ namespace Market.Warehouse.DataAccess.Migrations
 
                     b.HasOne("Market.Warehouse.Domain.Models.Category", "Category")
                         .WithMany("Products")
-                        .HasForeignKey("CategoryId");
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Market.Warehouse.Domain.Models.Discount", "Discount")
                         .WithMany("Products")
@@ -364,9 +423,7 @@ namespace Market.Warehouse.DataAccess.Migrations
 
                     b.HasOne("Market.Warehouse.Domain.Models.Warehouse", null)
                         .WithMany("Products")
-                        .HasForeignKey("WareHouseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("WarehouseId");
 
                     b.Navigation("Brand");
 
@@ -423,6 +480,8 @@ namespace Market.Warehouse.DataAccess.Migrations
 
             modelBuilder.Entity("Market.Warehouse.Domain.Models.Product", b =>
                 {
+                    b.Navigation("Inventories");
+
                     b.Navigation("ProductImages");
 
                     b.Navigation("Reviews");

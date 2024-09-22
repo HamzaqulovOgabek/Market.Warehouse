@@ -10,5 +10,6 @@ namespace Market.Warehouse.Application.Services.ProductServices
         IQueryable<ProductListDto> GetList(ProductSortFilterDto options);
         Task<int> Update(ProductDto dto);
         Task Delete(int id);
+        Task<int> AddAListOfProducts(List<ProductBaseDto> dtos);
     }
 }

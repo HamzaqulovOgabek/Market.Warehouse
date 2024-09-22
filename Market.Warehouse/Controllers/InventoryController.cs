@@ -15,7 +15,7 @@ public class InventoryController : ControllerBase
     }
 
     [HttpGet("{productId}/{warehouseId}")]
-    public async Task<ActionResult<InventoryDto>> GetStock(int productId, int warehouseId)
+    public async Task<ActionResult<InventoryDto>> GetStock([FromHeader] int productId, int warehouseId)
     {
         var stock = await _service.GetStockAsync(productId, warehouseId);
         if (stock == null)
@@ -24,50 +24,48 @@ public class InventoryController : ControllerBase
         }
         return Ok(stock);
     }
+
     [HttpGet]
-    public ActionResult<IEnumerable<InventoryDto>> GetAllStock(BaseSortFilterDto  dto)
+    public ActionResult<IEnumerable<InventoryDto>> GetAllStock([FromBody] BaseSortFilterDto  dto)
     {
         var stocks = _service.GetAllStock(dto);
         return Ok(stocks);
     }
-    [HttpPost("add")]
-    public async Task<IActionResult> AddStock(AddStockDto addStockDto)
+    [HttpPost]
+    public async Task<IActionResult> AddStock([FromBody] InventoryDto dto)
     {
-        await _service.AddStockAsync(
-            addStockDto.ProductId,
-            addStockDto.WarehouseId,
-            addStockDto.Quantity);
+        await _service.AddStockAsync(dto);
         return Ok();
     }
-    [HttpPost("remove")]
-    public async Task<IActionResult> RemoveStock(RemoveStockDto removeStockDto)
+    [HttpPost]
+    public async Task<IActionResult> RemoveStock([FromBody]InventoryDto dto)
     {
-        await _service.RemoveStockAsync(
-            removeStockDto.ProductId,
-            removeStockDto.WarehouseId,
-            removeStockDto.Quantity);
+        await _service.RemoveStockAsync(dto);
         return Ok();
     }
-    [HttpPut("update")]
-    public async Task<IActionResult> UpdateStock(UpdateStockDto updateStockDto)
+    [HttpPut]
+    public async Task<IActionResult> UpdateStock([FromBody] InventoryDto dto)
     {
-        await _service.UpdateStockAsync(
-            updateStockDto.ProductId,
-            updateStockDto.WarehouseId,
-            updateStockDto.NewQuantity);
+        await _service.UpdateStockAsync(dto);
+            
         return Ok();
     }
-    [HttpGet("product/{productId}")]
-    public async Task<ActionResult<IEnumerable<InventoryDto>>> GetStockByProduct(int productId)
+    [HttpGet("{productId}")]
+    public async Task<ActionResult<IEnumerable<InventoryDto>>> GetStockByProduct([FromQuery] int productId)
     {
         var stock = await _service.GetStockByProductAsync(productId);
 
         return Ok(stock);
     }
-    [HttpGet("warehouse/{warehouseId}")]
-    public async Task<ActionResult<IEnumerable<InventoryDto>>> GetStockByWarehouse(int warehouseId)
+    [HttpGet("{warehouseId}")]
+    public async Task<ActionResult<IEnumerable<InventoryDto>>> GetStockByWarehouse([FromQuery] int warehouseId)
     {
         var stock = await _service.GetStockByWarehouseAsync(warehouseId);
         return Ok(stock);
+    }
+    [HttpGet("{productId}")]
+    public async Task<IActionResult> ExistStockForProductAsync([FromQuery] int productId)
+    {
+        return Ok(await _service.ExistStockForProductAsync(productId));
     }
 }

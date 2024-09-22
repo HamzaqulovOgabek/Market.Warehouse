@@ -14,11 +14,11 @@ public class ProductService : IProductService
     private readonly IMapper _mapper;
     private readonly IRedisCacheService _redisDatabase;
 
-    public ProductService(IProductRepository repository, IMapper mapper, IRedisCacheService redisDatabase)
+    public ProductService(IProductRepository repository, IMapper mapper, IRedisCacheService redisCacheService)
     {
         _repository = repository;
         _mapper = mapper;
-        _redisDatabase = redisDatabase;
+        _redisDatabase = redisCacheService;
     }
     public async Task<ProductDto> Get(int id)
     {
@@ -56,6 +56,13 @@ public class ProductService : IProductService
         var productId = await _repository.CreateAsync(product);
         return productId;
     }
+    public async Task<int> AddAListOfProducts(List<ProductBaseDto> dtos)
+    {
+        var products = _mapper.Map<List<Product>>(dtos);
+        await _repository.AddAListOfProducts(products);
+
+        return products.Count;
+    }
     public async Task<int> Update(ProductDto dto)
     {
         IsValidData(dto);
@@ -76,4 +83,5 @@ public class ProductService : IProductService
             throw new InvalidOperationException("Invalid data for product");
         }
     }
+
 }

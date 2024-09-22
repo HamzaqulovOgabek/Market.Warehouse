@@ -31,6 +31,11 @@ public class ProductController : ControllerBase
     {
         return Ok(await _service.Create(dto));
     }
+    [HttpPost]
+    public async Task<IActionResult> AddListOfProducts([FromBody] List<ProductBaseDto> dtos)
+    {
+        return Ok(await _service.AddAListOfProducts(dtos));
+    }
     [HttpPut]
     public async Task<IActionResult> UpdateAsync([FromBody] ProductDto dto)
     {

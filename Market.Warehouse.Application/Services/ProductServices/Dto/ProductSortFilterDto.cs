@@ -7,6 +7,7 @@ public class ProductSortFilterDto : BaseSortFilterDto
     public int? BrandId { get; set; }
     public double? DiscountId { get; set; }
     public int? CategoryId { get; set; }
+    public int? WarehouseId { get; set; }
     public decimal? FromPrice { get; set; }
     public decimal? ToPrice { get; set; }
 }
