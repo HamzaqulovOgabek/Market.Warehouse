@@ -3,6 +3,7 @@ using Market.Warehouse.DataAccess.Exceptions;
 using Market.Warehouse.Domain.Enums;
 using Market.Warehouse.Domain.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Market.Warehouse.DataAccess.Repository;
 
@@ -11,7 +12,7 @@ public class BaseRepository<TEntity, TId> : IBaseRepository<TEntity, TId>
     where TEntity : BaseEntity<TId>, IHaveState
 {
     protected readonly AppDbContext Context;
-
+    protected IDbContextTransaction Transaction;
     public BaseRepository(AppDbContext context)
     {
         Context = context;
@@ -62,5 +63,19 @@ public class BaseRepository<TEntity, TId> : IBaseRepository<TEntity, TId>
             entity.State = State.PASSIVE;
         }
         await Context.SaveChangesAsync();
+    }
+
+    public IDbContextTransaction BeginTransaction()
+    {
+        Transaction = Context.Database.BeginTransaction();
+        return Transaction;
+    }
+    public async Task СommitTransactionAsync()
+    {
+        await Context.Database.CommitTransactionAsync();
+    }
+    public async Task RollBackTransactionAsync()
+    {
+        await Context.Database.RollbackTransactionAsync();
     }
 }
