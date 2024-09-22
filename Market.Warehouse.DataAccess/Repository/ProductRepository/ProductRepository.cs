@@ -29,4 +29,8 @@ public class ProductRepository : BaseRepository<Product, int>, IProductRepositor
 
         return product;
     }
+    public async Task AddAListOfProducts(List<Product> products)
+    {
+        await Context.Products.AddRangeAsync(products);
+    }
 }
