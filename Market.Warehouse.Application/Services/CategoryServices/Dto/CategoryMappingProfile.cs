@@ -10,7 +10,8 @@ public class CategoryMappingProfile : Profile
     {
         CreateMap<Category, CategoryDto>()
             .ForMember(d => d.ProductCount, cfg => cfg.MapFrom(e => e.Products!.Count));
-        CreateMap<Category, CategoryListDto>();
+        CreateMap<Category, CategoryListDto>()
+            .ForMember(d => d.ProductCount, cfg => cfg.MapFrom(e => e.Products.Count));
         CreateMap<CategoryCreateDto, Category>();
     }
 }

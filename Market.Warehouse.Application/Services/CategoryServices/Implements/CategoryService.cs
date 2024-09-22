@@ -6,6 +6,7 @@ using Market.Warehouse.Application.Services.CategoryServices.Dto;
 using Market.Warehouse.DataAccess.Exceptions;
 using Market.Warehouse.DataAccess.Repository.CategoryRepository;
 using Market.Warehouse.Domain.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Market.Warehouse.Application.Services.CategoryServices;
 
@@ -18,11 +19,12 @@ public class CategoryService : ICategoryService
     {
         _repository = repository;
         this._mapper = mapper;
-    }   
+    }
 
     public IQueryable<CategoryListDto> GetList(BaseSortFilterDto options)
-    { 
+    {
         return _repository.GetAll()
+             .Include(c => c.Products)
              .SortFilter(options)
              .Select(x => _mapper.Map<CategoryListDto>(x));
     }
@@ -38,7 +40,7 @@ public class CategoryService : ICategoryService
     public async Task<int> CreateAsync(CategoryCreateDto dto)
     {
         var category = _mapper.Map<Category>(dto);
-       return await _repository.CreateAsync(category);
+        return await _repository.CreateAsync(category);
     }
     public async Task<int> UpdateAsync(CategoryUpdateDto dto)
     {
