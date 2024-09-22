@@ -8,6 +8,7 @@ using Market.Warehouse.DataAccess.Repository.InventoryRepository;
 using Market.Warehouse.DataAccess.Repository.ProductImagesRepository;
 using Market.Warehouse.DataAccess.Repository.ProductRepository;
 using Market.Warehouse.DataAccess.Repository.ReviewRepository;
+using Market.Warehouse.DataAccess.Repository.WarehouseRepository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -38,6 +39,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ICartItemRepository, CartItemRepository>();
         services.AddScoped<ICartRepository, CartRepository>();
         services.AddScoped<IInventoryRepository, InventoryRepository>();
+        services.AddScoped<IWarehouseRepository, WarehouseRepository>();
 
 
     }
