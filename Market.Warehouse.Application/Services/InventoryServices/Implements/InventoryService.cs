@@ -32,7 +32,7 @@ public class InventoryService : IInventoryService
         var inventory = await _inventoryRepository.GetAsync(productId, warehouseId);
         if (inventory == null)
         {
-            throw new InvalidOperationException($"No inventory found for product {productId} in warehouse {warehouseId}.");
+            throw new InventoryNotFoundException(productId, warehouseId);
         }
 
         return _mapper.Map<InventoryDto>(inventory);
@@ -49,18 +49,18 @@ public class InventoryService : IInventoryService
         }
         return inventories.Select(i => _mapper.Map<InventoryDto>(i));
     }
-    public async Task AddStockAsync(int productId, int warehouseId, int quantity)
+    public async Task AddStockAsync(InventoryDto dto)
     {
-        IsInvalidInput(productId, warehouseId, quantity);
+        IsInvalidInput(dto.ProductId, dto.WarehouseId, dto.Quantity);
 
-        var inventory = await _inventoryRepository.GetAsync(productId, warehouseId);
+        var inventory = await _inventoryRepository.GetAsync(dto.ProductId, dto.WarehouseId);
         if (inventory == null)
         {
             // Create a new inventory if it doesn't exist
             inventory = new Inventory
             {
-                ProductId = productId,
-                WarehouseId = warehouseId,
+                ProductId = dto.ProductId,
+                WarehouseId = dto.WarehouseId,
                 Quantity = 0 // Start with 0 and add the quantity
             };
             await _inventoryRepository.AddAsync(inventory);
@@ -68,7 +68,7 @@ public class InventoryService : IInventoryService
         using var transaction = _inventoryRepository.BeginTransaction();
         try
         {
-            inventory.Quantity += quantity;
+            inventory.Quantity += dto.Quantity;
             await _inventoryRepository.UpdateAsync(inventory);
 
             await _inventoryRepository.СommitTransactionAsync();
@@ -76,52 +76,44 @@ public class InventoryService : IInventoryService
         catch (DbUpdateConcurrencyException)
         {
             await _inventoryRepository.RollBackTransactionAsync();
-            // Log the stock change (you can add actual logging here)
-            _logger.LogWarning($"Concurrency conflict when updating stock for product {productId} in warehouse {warehouseId}");
+
+            _logger.LogWarning($"Concurrency conflict when updating stock for product {dto.ProductId} in warehouse {dto.WarehouseId}");
             throw;
         }
-        _logger.LogInformation($"Stock added for product {productId} " +
-                $"in warehouse {warehouseId}. New quantity: {inventory.Quantity}");
+        _logger.LogInformation($"Stock added for product {dto.ProductId} " +
+                $"in warehouse {dto.WarehouseId}. New quantity: {inventory.Quantity}");
     }
-    public async Task RemoveStockAsync(int productId, int warehouseId, int quantity)
+    public async Task RemoveStockAsync(InventoryDto dto)
     {
-        IsInvalidInput(productId, warehouseId, quantity);
+        IsInvalidInput(dto.ProductId, dto.WarehouseId, dto.Quantity);
 
-        var inventory = await _inventoryRepository.GetAsync(productId, warehouseId);
-        if (inventory == null)
-        {
-            throw new InvalidOperationException($"Not found inventory for product {productId} in warehouse {warehouseId}.");
-        }
+        var inventory = await GetStockAsync(dto.ProductId, dto.WarehouseId);
 
-        if (inventory.Quantity < quantity)
+        if (inventory.Quantity < dto.Quantity)
         {
             throw new InvalidOperationException("Cannot remove more stock than is available.");
         }
 
-        inventory.Quantity -= quantity;
-        await _inventoryRepository.UpdateAsync(inventory);
+        inventory.Quantity -= dto.Quantity;
+        await UpdateStockAsync(inventory);
 
         // Log the stock change
     }
-    public async Task UpdateStockAsync(int productId, int warehouseId, int newQuantity)
+    public async Task UpdateStockAsync(InventoryDto dto)
     {
         try
         {
-            var inventory = await _inventoryRepository.GetAsync(productId, warehouseId);
-            if (inventory == null)
-            {
-                throw new InventoryNotFoundException(productId, warehouseId);
-            }
+            var inventoryDto = await GetStockAsync(dto.ProductId, dto.WarehouseId);
 
-            inventory.Quantity = newQuantity;
-            await _inventoryRepository.UpdateAsync(inventory);
+            inventoryDto.Quantity = dto.Quantity;
+            await _inventoryRepository.UpdateAsync(_mapper.Map<Inventory>(inventoryDto));
         }
         catch (DbUpdateConcurrencyException)
         {
-            _logger.LogWarning($"Concurrency conflict when updating stock for product {productId} in warehouse {warehouseId}");
+            _logger.LogWarning($"Concurrency conflict when updating stock for product {dto.ProductId} in warehouse {dto.WarehouseId}");
             throw;
         }
-        _logger.LogInformation($"Stock updated for product {productId} in warehouse {warehouseId}. New quantity: {newQuantity}");
+        _logger.LogInformation($"Stock updated for product {dto.ProductId} in warehouse {dto.WarehouseId}. New quantity: {dto.Quantity}");
     }
     public async Task<IEnumerable<InventoryDto>> GetStockByProductAsync(int productId)
     {
@@ -150,7 +142,22 @@ public class InventoryService : IInventoryService
 
         return stocks.Any(p => p.Quantity > 0);
     }
+    public async Task TransferStockAsync(TransferStockDto dto)
+    {
+        var sourceInventory = await GetStockAsync(dto.ProductId, dto.SourceWarehouseId);
+        var targetInventory = await GetStockAsync(dto.ProductId, dto.TargetWarehouseId);
 
+        if (sourceInventory.Quantity < dto.Quantity)
+        {
+            throw new InvalidOperationException("Insufficient stock in warehouse");
+        }
+
+        sourceInventory.Quantity -= dto.Quantity;
+        targetInventory.Quantity += dto.Quantity;
+
+        await UpdateStockAsync(sourceInventory);
+        await UpdateStockAsync(targetInventory);
+    }
     private void IsInvalidInput(int productId = 1, int warehouseId = 1, int quantity = 1)
     {
         if (productId <= 0) throw new ArgumentException("Invalid product ID", nameof(productId));

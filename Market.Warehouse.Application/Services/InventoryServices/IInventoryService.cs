@@ -6,10 +6,12 @@ namespace Market.Warehouse.Application.Services.InventoryServices
     {
         Task<InventoryDto> GetStockAsync(int productId, int warehouseId);
         IQueryable<InventoryDto> GetAllStock(BaseSortFilterDto dto);
-        Task AddStockAsync(int productId, int warehouseId, int quantity);
-        Task RemoveStockAsync(int productId, int warehouseId, int quantity);
-        Task UpdateStockAsync(int productId, int warehouseId, int newQuantity);
+        Task AddStockAsync(InventoryDto dto);
+        Task RemoveStockAsync(InventoryDto dto);
+        Task UpdateStockAsync(InventoryDto dto);
         Task<IEnumerable<InventoryDto>> GetStockByProductAsync(int productId);
         Task<IEnumerable<InventoryDto>> GetStockByWarehouseAsync(int warehouseId);
+        Task<bool> ExistStockForProductAsync(int productId);
+        Task TransferStockAsync(TransferStockDto dto);
     }
 }

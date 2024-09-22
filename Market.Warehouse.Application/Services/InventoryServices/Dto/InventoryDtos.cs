@@ -6,23 +6,10 @@ public class InventoryDto
     public int WarehouseId { get; set; }
     public int Quantity { get; set; }
 }
-public class AddStockDto
+public class TransferStockDto
 {
     public int ProductId { get; set; }
-    public int WarehouseId { get; set; }
     public int Quantity { get; set; }
-}
-
-public class RemoveStockDto
-{
-    public int ProductId { get; set; }
-    public int WarehouseId { get; set; }
-    public int Quantity { get; set; }
-}
-
-public class UpdateStockDto
-{
-    public int ProductId { get; set; }
-    public int WarehouseId { get; set; }
-    public int NewQuantity { get; set; }
+    public int SourceWarehouseId { get; set; }
+    public int TargetWarehouseId { get; set; }
 }
