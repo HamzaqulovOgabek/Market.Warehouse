@@ -19,6 +19,7 @@ public class Product : Auditable<int>, IHaveState
     public int? DiscountId { get; set; }
     public int CategoryId { get; set; }
     public State State { get; set; } = State.ACTIVE;
+    public int? Quantity { get; set; }
 
     public Brand Brand { get; set; } = null!;
     public Discount? Discount { get; set; }
