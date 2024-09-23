@@ -10,6 +10,8 @@ public class ProductListDto
     public decimal? DiscountPrice { get; set; }
     public int? ReviewCount { get; set; }
     public double? Rating { get; set; }
+    public int TotalProductCount { get; set; }
+
     [JsonIgnore]
     public int CategoryId { get; set; }
     [JsonIgnore]

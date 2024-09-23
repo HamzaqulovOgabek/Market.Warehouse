@@ -11,6 +11,7 @@ public class ProductDto : ProductBaseDto
     public int ReviewCount { get; set; }
     public string? CategoryName { get; set; }
     public double? Rating { get; set; }
+    public int TotalProductCount { get; set; } 
     public DiscountDto DiscountDto { get; set; }
     public List<ReviewDto> ReviewDtos { get; set; }
 }
