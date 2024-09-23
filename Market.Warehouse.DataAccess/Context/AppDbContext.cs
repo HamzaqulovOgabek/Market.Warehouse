@@ -40,5 +40,12 @@ public class AppDbContext : DbContext
         {
             options.ToTable("ProductImage");
         });
+
+        modelBuilder.Entity<Inventory>(options =>
+        {
+            options.HasKey(i => new { i.ProductId, i.WarehouseId });
+        });
+        
+
     }
 }
