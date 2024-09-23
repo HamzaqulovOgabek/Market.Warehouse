@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Market.Warehouse.Application.Services.InventoryServices;
 using Market.Warehouse.Application.Services.RedisCacheServices;
 using Market.Warehouse.DataAccess.Exceptions;
 using Market.Warehouse.DataAccess.Repository.ProductRepository;
@@ -13,17 +14,25 @@ public class ProductService : IProductService
     private readonly IProductRepository _repository;
     private readonly IMapper _mapper;
     private readonly IRedisCacheService _redisDatabase;
+    private readonly IInventoryService _inventoryService;
 
-    public ProductService(IProductRepository repository, IMapper mapper, IRedisCacheService redisCacheService)
+    public ProductService(
+        IProductRepository repository, 
+        IMapper mapper, 
+        IRedisCacheService redisCacheService, 
+        IInventoryService inventoryService
+        )
     {
         _repository = repository;
         _mapper = mapper;
         _redisDatabase = redisCacheService;
+        _inventoryService = inventoryService;
     }
     public async Task<ProductDto> Get(int id)
     {
         string cacheKey = $"product:{id}";
         var cachedProduct = await _redisDatabase.GetCacheAsync<Product>(cacheKey);
+
         if (cachedProduct != null)
         {
             return _mapper.Map<ProductDto>(cachedProduct);
@@ -33,7 +42,9 @@ public class ProductService : IProductService
         if (product == null)
             throw new EntityNotFoundException("Entity not Found with this id");
 
+        product.Quantity = await CalculateProductQuantityAsync(id);
         await _redisDatabase.SetCacheAsync(cacheKey, product, TimeSpan.FromMinutes(30));
+
         return _mapper.Map<ProductDto>(product);
     }
     public IQueryable<ProductListDto> GetList(ProductSortFilterDto options)
@@ -82,6 +93,12 @@ public class ProductService : IProductService
         {
             throw new InvalidOperationException("Invalid data for product");
         }
+    }
+    private async Task<int> CalculateProductQuantityAsync(int productId)
+    {
+        var inventory = await _inventoryService.GetStockByProductAsync(productId);
+        var totalQuantity = inventory.Sum(x => x.Quantity);
+        return totalQuantity;
     }
 
 }
