@@ -24,9 +24,13 @@ public class RedisCacheService : IRedisCacheService
     }
     public async Task SetCacheAsync<T>(string key, T data, TimeSpan expiration)
     {
-        var jsonData = JsonConvert.SerializeObject(data);
+        var jsonData = JsonConvert.SerializeObject(data,  new JsonSerializerSettings
+        {
+            ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+        });
         await _database.StringSetAsync(key, jsonData, expiration);
     }
+
     public async Task RemoveCacheAsync(string key)
     {
         await _database.KeyDeleteAsync(key);

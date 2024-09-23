@@ -18,9 +18,9 @@ public class ProductRepository : BaseRepository<Product, int>, IProductRepositor
         var isExistName = await Context.Products.AnyAsync(p => p.Name == name);
         return isExistName;
     }
-    public override Task<Product?> GetByIdAsync(int id)
+    public override async Task<Product?> GetByIdAsync(int id)
     {
-        var product = Context.Products
+        var product = await Context.Products
             .Include(p => p.Brand)
             .Include(p => p.Discount)
             .Include(p => p.Category)

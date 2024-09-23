@@ -4,6 +4,7 @@ using Market.Warehouse.DataAccess.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Market.Warehouse.DataAccess.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240923062045_AddedWarehouseIdToProduct2")]
+    partial class AddedWarehouseIdToProduct2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -436,7 +439,7 @@ namespace Market.Warehouse.DataAccess.Migrations
                         .WithMany("Products")
                         .HasForeignKey("DiscountId");
 
-                    b.HasOne("Market.Warehouse.Domain.Models.Warehouse", null)
+                    b.HasOne("Market.Warehouse.Domain.Models.Warehouse", "Warehouse")
                         .WithMany("Products")
                         .HasForeignKey("WarehouseId");
 
@@ -445,6 +448,8 @@ namespace Market.Warehouse.DataAccess.Migrations
                     b.Navigation("Category");
 
                     b.Navigation("Discount");
+
+                    b.Navigation("Warehouse");
                 });
 
             modelBuilder.Entity("Market.Warehouse.Domain.Models.ProductImage", b =>

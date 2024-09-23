@@ -1,5 +1,4 @@
-﻿using Market.Warehouse.Domain.Models;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace Market.Warehouse.Application.Services.ProductServices;
 

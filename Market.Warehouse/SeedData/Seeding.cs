@@ -17,10 +17,19 @@ public class Seeding
         await SeedBrand(context);
 
         await SeedProduct(context);
+
+        await SeedWarehouse(context);
+
+        await SeedInventory(context);
+
+        await SeedReviewForProduct(context);
+
     }
+
+
     private static async Task SeedCategory(AppDbContext? context)
     {
-        if(context == null) throw new ArgumentNullException(nameof(context));
+        IsAppDbContextNull(context);
 
         int index = 1;
         var categories = new List<Category>();
@@ -44,6 +53,8 @@ public class Seeding
     }
     private static async Task SeedBrand(AppDbContext? context)
     {
+        IsAppDbContextNull(context);
+
         int index = 1;
         var brands = new List<Brand>();
         while (index < 100)
@@ -63,6 +74,8 @@ public class Seeding
     }
     private static async Task SeedProduct(AppDbContext? context)
     {
+        IsAppDbContextNull(context);
+
         int index = 1;
         var products = new List<Product>();
         while (index < 2000)
@@ -84,8 +97,35 @@ public class Seeding
             await context.SaveChangesAsync();
         }
     }
+    private static async Task SeedWarehouse(AppDbContext? context)
+    {
+        IsAppDbContextNull(context);
+
+        int index = 1;
+        var warehouses = new List<Domain.Models.Warehouse>();
+        while (index < 4)
+        {
+            var inventory = new Domain.Models.Warehouse
+            {
+                Name = $"Warehouse {index}",
+                City = $"City {index}",
+                Location = $"Location {index}",
+                Street = $"Street {index}",
+                PostalCode = new Random().Next(10000, 99999).ToString(),
+            };
+            warehouses.Add(inventory);
+            index++;
+        }
+        if (!await context.WareHouses.AnyAsync())
+        {
+            await context.WareHouses.AddRangeAsync(warehouses);
+            await context.SaveChangesAsync();
+        }
+    }
     private static async Task SeedInventory(AppDbContext? context)
     {
+        IsAppDbContextNull(context);
+
         int index = 1;
         var inventories = new List<Inventory>();
         while (index < 2000)
@@ -93,17 +133,43 @@ public class Seeding
             var inventory = new Inventory
             {
                 ProductId = new Random().Next(1, 2000),
-                WarehouseId = new Random().Next(1, 10),
-                Quantity = new Random().Next(1, 100)
+                WarehouseId = new Random().Next(1, 4),
+                Quantity = new Random().Next(1, 100),
             };
             inventories.Add(inventory);
             index++;
         }
-        if (!await context.Inventories.AnyAsync())
+         if (!await context.Inventories.AnyAsync())
         {
             await context.Inventories.AddRangeAsync(inventories);
             await context.SaveChangesAsync();
         }
     }
+    private static async Task SeedReviewForProduct(AppDbContext? context)
+    {
+        IsAppDbContextNull(context);
 
+        int index = 1;
+        var reviews = new List<Review>();
+        while (index < 2000)
+        {
+            var inventory = new Review
+            {
+                ProductId = new Random().Next(1, 1000),
+                Message = $"Review {index}",
+                Rate = new Random().Next(2, 6)
+            };
+            reviews.Add(inventory);
+            index++;
+        }
+         if (!await context.Reviews.AnyAsync())
+        {
+            await context.Reviews.AddRangeAsync(reviews);
+            await context.SaveChangesAsync();
+        }
+    }
+    private static void IsAppDbContextNull(AppDbContext? context)
+    {
+        if (context == null) throw new ArgumentNullException(nameof(context));
+    }
 }

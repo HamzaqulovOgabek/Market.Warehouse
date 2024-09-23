@@ -25,8 +25,8 @@ public class InventoryController : ControllerBase
         return Ok(stock);
     }
 
-    [HttpGet]
-    public ActionResult<IEnumerable<InventoryDto>> GetAllStock([FromBody] BaseSortFilterDto  dto)
+    [HttpPost]
+    public ActionResult<IEnumerable<InventoryDto>> GetAllStock(BaseSortFilterDto  dto)
     {
         var stocks = _service.GetAllStock(dto);
         return Ok(stocks);
