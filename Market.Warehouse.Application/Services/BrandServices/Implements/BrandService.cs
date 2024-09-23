@@ -4,6 +4,7 @@ using Market.Warehouse.Application.Extensions;
 using Market.Warehouse.DataAccess.Exceptions;
 using Market.Warehouse.DataAccess.Repository.BrandRepository;
 using Market.Warehouse.Domain.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Market.Warehouse.Application.Services.BrandServices;
 
@@ -22,6 +23,7 @@ public class BrandService : IBrandService
     {
 
         var query = _repository.GetAll()
+            .Include(b => b.Products)
             .SortFilter(dto, nameof(BrandDto.Name))
             .Select(x => _mapper.Map<BrandDto>(x));
 
