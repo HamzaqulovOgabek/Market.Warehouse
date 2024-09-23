@@ -26,9 +26,9 @@ public class CartController : ControllerBase
     }
 
     [HttpPost("{userId}/add")]
-    public async Task<IActionResult> AddToCartAsync(int userId, [FromBody] AddToCartRequest request)
+    public async Task<IActionResult> AddToCartAsync([FromBody] CartDto dto)
     {
-        await _cartService.AddToCartAsync(userId, request.ProductId, request.Quantity);
+        await _cartService.AddToCartAsync(dto);
         return Ok();
     }
 
@@ -38,7 +38,11 @@ public class CartController : ControllerBase
         await _cartService.RemoveFromCartAsync(userId, productId);
         return Ok();
     }
-
+    [HttpDelete]
+    public async Task<IActionResult> RemoveFromCartByQuantityAsync(CartDto dto)
+    {
+        return Ok(await _cartService.RemoveFromCartAsync(dto));
+    }
     [HttpDelete("{userId}/clear")]
     public async Task<IActionResult> ClearCartAsync(int userId)
     {

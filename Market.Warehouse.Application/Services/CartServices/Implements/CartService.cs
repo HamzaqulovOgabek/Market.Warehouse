@@ -27,10 +27,17 @@ public class CartService : ICartService
         var cartItemDtos = _mapper.Map<List<CartItemDto>>(cartItems);
 
         // Calculate aggregates
-        var totalDistinctProducts = cartItemDtos.Select(ci => ci.ProductId).Distinct().Count();
+        var totalDistinctProducts = cartItemDtos
+            .Select(ci => ci.ProductId)
+            .Distinct()
+            .Count();
         var totalProductCount = cartItemDtos.Sum(ci => ci.Quantity);
-        var totalDiscount = cartItemDtos.Sum(ci => (ci.Price - ci.DiscountPrice) * ci.Quantity);
-        var totalPrice = cartItemDtos.Sum(ci => (ci.DiscountPrice) * ci.Quantity);
+        var totalDiscount = cartItemDtos
+            .Sum(ci => ci.DiscountPrice != 0 ? (ci.Price - ci.DiscountPrice) * ci.Quantity
+                                             : 0);
+        var totalPrice = cartItemDtos
+            .Sum(ci => ci.DiscountPrice != 0 ? ci.DiscountPrice * ci.Quantity
+                                             : ci.Price * ci.Quantity);
 
         var cartDetailsDto = new CartDetailsDto
         {
@@ -43,13 +50,17 @@ public class CartService : ICartService
         };
         return cartDetailsDto;
     }
-    public async Task AddToCartAsync(int userId, int productId, int quantity)
+    public async Task AddToCartAsync(CartDto dto)
     {
+        int productId = dto.ProductId;
+        int userId = dto.UserId;
+        int quantity = dto.Quantity;
+
         // Find the user's cart
         var existingCartItem = await _context.CartItems
             .Include(c => c.Product)
             .Where(c => c.ProductId == productId && c.UserId == userId)
-            .FirstOrDefaultAsync(c => c.UserId == userId);
+            .FirstOrDefaultAsync();
 
         if (existingCartItem != null)
         {
@@ -64,7 +75,6 @@ public class CartService : ICartService
                 ProductId = productId,
                 Quantity = quantity,
                 DateAdded = DateTime.Now,
-
             };
             await _context.CartItems.AddAsync(cartItem);
         }
@@ -81,6 +91,18 @@ public class CartService : ICartService
             _context.Remove(cartItem);
             await _context.SaveChangesAsync();
         }
+    }
+    public async Task<int> RemoveFromCartAsync(CartDto dto)
+    {
+        // Remove the specified quantity of the product from the cart
+        var cartItem = await _context.CartItems
+            .FirstOrDefaultAsync(i => i.UserId == dto.UserId && i.ProductId == dto.ProductId);
+        if(cartItem.Quantity < dto.Quantity)
+            throw new InvalidOperationException("Not enough quantity in the cart");
+
+        cartItem.Quantity -= dto.Quantity;
+        await _context.SaveChangesAsync();
+        return cartItem.Quantity;
     }
     public async Task ClearCartAsync(int userId)
     {
